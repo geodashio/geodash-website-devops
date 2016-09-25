@@ -1,0 +1,57 @@
+---
+
+RVM_KEY_SERVER: "hkp://keys.gnupg.net"
+RVM_KEY: "409B6B1796C275462A1703113804BB82D39DC0E3"
+
+
+# pre_tasks & common_base_centos
+URI_SOURCE:
+  python276: "http://python.org/ftp/python/2.7.6/Python-2.7.6.tgz"
+  ez_setup: "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
+  postgis: "http://download.osgeo.org/postgis/source/postgis-2.0.6.tar.gz"
+
+# common_networking_centos
+IPTABLES_RULES:
+  - insertafter: "^-A INPUT -i lo -j ACCEPT$"
+    line: "-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT"
+  - insertafter: "^-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT$"
+    line: "-A INPUT -p tcp -m tcp --dport 8180 -j ACCEPT"
+  - insertafter: "^-A INPUT -p tcp -m tcp --dport 8180 -j ACCEPT$"
+    line: "-A INPUT -p tcp -m tcp --dport 8280 -j ACCEPT"
+
+# common_java_ubuntu
+PACKAGES_JAVA:
+  - "openjdk-8-jdk"
+
+ALTERNATIVE_JAVA: "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
+
+# common_db_centos
+PACKAGES_EPEL:
+    - http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
+PACKAGES_DATABASE:
+    - http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-6.noarch.rpm
+    - http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
+
+PATH_PG_HBA: "/var/lib/pgsql/9.2/data/pg_hba.conf"
+PATH_PG_CONF: "/var/lib/pgsql/9.2/data/postgresql.conf"
+
+# common_webserver_proxy_centos
+PACKAGES_TOMCAT:
+  - "tomcat6"
+
+SERVICES_TOMCAT:
+  - "tomcat6"
+
+# common_webserver_proxy_centos
+PACKAGES_PROXY:
+  - http://nginx.org/packages/rhel/6/noarch/RPMS/nginx-release-rhel-6-0.el6.ngx.noarch.rpm
+
+# common_venv_ubuntu
+VENV_NAME: geodash
+VENV_PATH: "/home/vagrant/.venvs/geodash"
+
+PIP_VERSION: "8.1.1"
+POSTGIS_VERSION: "( 2, 0, 6 )"
+GDAL_VERSION: "2.1.0"
+GDAL_SOURCE: "https://pypi.python.org/packages/d1/98/27fff31ad298f3ec50db19dc3adfd8387279e158b1c6331c531c5fc7d830/GDAL-2.1.0.tar.gz"

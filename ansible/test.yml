@@ -1,0 +1,8 @@
+---
+
+- name: Creates a GeoDash website development virtual machine
+  hosts: localhost
+  roles:
+    - common_base_ubuntu  # Installs basic libraries, including GCC, PIP
+    - common_webserver_proxy_ubuntu  # Installs NGINX, and configures service
+    - geodash_website

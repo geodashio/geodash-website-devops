@@ -1,0 +1,54 @@
+---
+
+- name: "RVM Key"
+  become: yes
+  become_user: root
+  shell: "curl -sSL https://rvm.io/mpapis.asc | gpg --import -"
+  args:
+    chdir: "/tmp"
+
+- name: "Download RVM"
+  become: yes
+  become_user: root
+  shell: "{{ item }}"
+  with_items:
+    - "\\curl -sSL https://get.rvm.io -o rvm.sh"
+    - "cat /tmp/rvm.sh | bash -s stable"
+  args:
+    chdir: "/tmp"
+
+- name: "Install RVM"
+  become: yes
+  become_user: root
+  shell: "source /usr/local/rvm/scripts/rvm; {{ item }}"
+  with_items:
+    - "rvm get stable"
+    - "rvm install ruby-2.0.0-p353"
+    - "rvm --default use ruby-2.0.0-p353"
+  args:
+    chdir: "/tmp"
+    executable: "/bin/bash"
+
+- name: "Install GEMs"
+  become: yes
+  become_user: root
+  shell: "{{ item }}"
+  with_items:
+    - gem install jekyll
+    - gem install redcarpet
+    - gem install kramdown
+  environment:
+    RUBY_VERSION: "ruby-2.0.0-p353"
+    MY_RUBY_HOME: "/usr/local/rvm/rubies/ruby-2.0.0-p353"
+    GEM_HOME: "/usr/local/rvm/gems/ruby-2.0.0-p353"
+    GEM_PATH: "/usr/local/rvm/gems/ruby-2.0.0-p353:/usr/local/rvm/gems/ruby-2.0.0-p353@global"
+    rvm_version: "1.27.0 (latest)"
+    rvm_prefix: "/usr/local"
+    rvm_path: "/usr/local/rvm"
+    rvm_bin_path: "/usr/local/rvm/bin"
+    PATH: "/usr/local/rvm/gems/ruby-2.0.0-p353/bin:/usr/local/rvm/gems/ruby-2.0.0-p353@global/bin:/usr/local/rvm/rubies/ruby-2.0.0-p353/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/rvm/bin"
+
+- name: "Install Static Development Libraries to Environment"
+  npm:
+    path: "~/geodash.github.io.git"
+    state: "present"
